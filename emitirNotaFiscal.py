@@ -1,13 +1,15 @@
-# Status do Sefaz
-#
-# OBS: A utilização do endpoint deve ser realizada como demonstrativo do Status do
-# Sefaz em sua plataforma, sendo necessário trabalhar com cache de ao menos 10 minutos.
-# Não é necessário realizar a requisição antes da emissão de cada Nota Fiscal,
-# porque este procedimento é realizado de forma automática em todos os endpoints.
-
 # Biblioteca de comunicação http/https
 import http.client
+# Biblioteca para manipulação de json
+import json
 
+# Busca o arquivo que contém o json para Emissão de Nota Fiscal
+with open('ExemploJson/emitirNotaFiscal.json', 'r') as json_file:
+   # Carrega o conteudo do arquivo e converte em array
+   array = json.load(json_file)
+   # Converte o array em json novamente
+   json = json.dumps(array)
+   
 #  Define o Host para a comunicação com a API
 conn = http.client.HTTPSConnection("webmaniabr.com")
 
@@ -22,7 +24,7 @@ headers = {
 }
 
 # Comunicando com a API
-conn.request("GET", "/api/1/nfe/sefaz/", headers=headers)
+conn.request("POST", "/api/1/nfe/emissao/", json, headers)
 
 # Retorno da API
 res = conn.getresponse()
